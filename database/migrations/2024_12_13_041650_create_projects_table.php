@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('client_name');
             $table->text('description')->nullable();
-            $table->enum('status', ['not_started', 'ongoing', 'completed'])->default('not_started');
+            $table->enum('status', ['not_started', 'ongoing', 'completed', 'active'])->default('not_started');
+
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->integer('total_tasks')->default(0);
             $table->integer('completed_tasks')->default(0);
             $table->timestamps();

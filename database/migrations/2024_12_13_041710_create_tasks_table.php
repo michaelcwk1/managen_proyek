@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->enum('status', ['available', 'in_progress', 'completed'])->default('available');
+            $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
             $table->string('difficulty_level')->nullable();
             $table->integer('estimated_hours')->nullable();
@@ -24,6 +24,11 @@ return new class extends Migration
             $table->date('deadline')->nullable();
             $table->timestamps();
         });
+        
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'in-progress', 'completed'])->default('pending');
+        });
+        
     }
     
     

@@ -8,7 +8,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Project extends Model
 {
-    use Notifiable, HasRoles; 
+    use Notifiable, HasRoles;
     protected $fillable = ['name', 'client_name', 'description', 'status', 'start_date', 'end_date', 'created_by', 'total_tasks', 'completed_tasks'];
 
     public function creator()
@@ -21,4 +21,3 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 }
-

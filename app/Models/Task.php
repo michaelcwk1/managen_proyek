@@ -8,15 +8,20 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Task extends Model
 {
-    use Notifiable, HasRoles; 
+    use Notifiable, HasRoles;
     protected $fillable = ['project_id', 'title', 'description', 'status', 'assigned_to', 'difficulty_level', 'estimated_hours', 'actual_hours', 'deadline'];
+    
 
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
-
+ 
     public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+    public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
