@@ -125,8 +125,8 @@
 
     </header><!-- End Header -->
 
-    <!-- ======= Admin Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
+     <!-- ======= Admin Sidebar ======= -->
+     <aside id="sidebar" class="sidebar">
         <ul class="sidebar-nav" id="sidebar-nav">
             <!-- Dashboard -->
             <li class="nav-item">
@@ -146,7 +146,7 @@
                 <ul id="projects-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="{{ route('admin.projects.index') }}">
-                            <i class="bi bi-circle"></i><span>Project List</span>
+                            <i class="bi bi-circle"></i><span>Create Project </span>
                         </a>
                     </li>
                 </ul>
@@ -162,25 +162,23 @@
                 <ul id="tasks-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="{{ route('admin.tasks.index') }}">
-                            <i class="bi bi-circle"></i><span>Task List</span>
+                            <i class="bi bi-circle"></i><span>Create Task </span>
                         </a>
                     </li>
                 </ul>
             </li>
-    
-            <!-- Users -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#">
-                    <i class="bi bi-people"></i>
-                    <span>Users</span>
-                </a>
-            </li>
-    
             <!-- Submissions -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="">
-                    <i class="bi bi-upload"></i>
-                    <span>Submissions</span>
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Reporting Task</span>
+                </a>
+            </li>
+            <!-- Submissions -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="">
+                    <i class="bi bi-display"></i>
+                    <span>Submission</span>
                 </a>
             </li>
         </ul>

@@ -122,68 +122,60 @@
 
     </header><!-- End Header -->
 
-    <!-- ======= User Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
-        <ul class="sidebar-nav" id="sidebar-nav">
-            <!-- Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('user.dashboard') }}">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-    
-            <!-- My Tasks -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#tasks-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-list-task"></i>
-                    <span>My Tasks</span>
-                    <i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="tasks-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ route('user.tasks.index') }}">
-                            <i class="bi bi-circle"></i><span>Task List</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('user.tasks.report') }}">
-                            <i class="bi bi-circle"></i><span>Take Task </span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-    
-            <!-- Submissions -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#submissions-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-upload"></i>
-                    <span>My Submissions</span>
-                    <i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="submissions-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href=" ">
-                            <i class="bi bi-circle"></i><span>Submission List</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href=" ">
-                            <i class="bi bi-circle"></i><span>Create Submission</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-    
-            <!-- Profile -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href=" ">
-                    <i class="bi bi-person"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+  <!-- ======= User Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <!-- Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ route('user.dashboard') }}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <!-- My Tasks -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#tasks-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-list-task"></i>
+                <span>My Tasks</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="tasks-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('user.tasks.index') }}">
+                        <i class="bi bi-circle"></i><span>Index</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('user.tasks.report') }}">
+                        <i class="bi bi-circle"></i><span>History</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Submissions -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#submissions-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-upload"></i>
+                <span>Submissions</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="submissions-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href=" ">
+                        <i class="bi bi-circle"></i><span>Submit Task</span>
+                    </a>
+                </li>
+                <li>
+                    <a href=" ">
+                        <i class="bi bi-circle"></i><span>Feedback</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</aside>
 
     <!-- End User Sidebar -->
 
