@@ -29,8 +29,10 @@
 
 
         // Download route - Perbaikan method dari download menjadi downloadFile
-        Route::get('/submissions/{submission}/download', [App\Http\Controllers\Admin\SubmissionController::class, 'downloadFile'])->name('submissions.download');
-        Route::get('/submissions/{id}/download', [SubmissionController::class, 'download'])->name('admin.submissions.download');
+        Route::get('admin/submissions/download/{id}', [SubmissionController::class, 'download'])
+        ->name('admin.submissions.download');
+        Route::get('/submission/{id}/download', [SubmissionController::class, 'download'])->name('submission.download');
+        Route::get('/submissions/{submission}/download', [App\Http\Controllers\Admin\SubmissionController::class, 'download'])->name('submissions.download');
     });
 
     // User routes

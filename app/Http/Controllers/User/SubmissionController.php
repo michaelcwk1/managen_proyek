@@ -59,7 +59,8 @@ class SubmissionController extends Controller
             // Handle new file upload
             $file = $request->file('file');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('submissions', $fileName, 'public');
+            $filePath = $file->storeAs('public/submissions', $fileName); // Ensure the 'public' prefix
+
 
             // Update submission
             $submission->update([

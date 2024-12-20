@@ -18,7 +18,7 @@
             <div class="col-auto">
                 <h2>Reporting Task</h2>
             </div>
-            
+
         </div>
         <div class="card">
             <div class="card-header">
@@ -52,10 +52,14 @@
                                     <td>{{ $submission->user->name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($submission->submission_date)->format('d M Y H:i') }}</td>
                                     <td>
-                                        <a href="{{ route('admin.submissions.download', $submission->id) }}"
-                                            class="btn btn-sm btn-info">
-                                            <i class="bi bi-download"></i> Download
-                                        </a>
+                                        @if ($submission->file_path)
+                                            <a href="{{ route('admin.submissions.download', $submission->id) }}"
+                                                class="btn btn-sm btn-info">
+                                                <i class="bi bi-download"></i> Download
+                                            </a>
+                                        @else
+                                            <span class="text-muted">No file</span>
+                                        @endif
                                     </td>
                                     <td>
                                         <span

@@ -70,7 +70,10 @@ class TaskController extends Controller
             if ($request->hasFile('submission_file')) {
                 $file = $request->file('submission_file');
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('submissions', $fileName, 'public');
+                $filePath = $file->storeAs('public/submissions', $fileName);  
+
+
+                
 
                 // Update task status
                 $task->status = 'completed';
