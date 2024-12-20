@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('client_name');
             $table->text('description')->nullable();
             $table->enum('status', ['not_started', 'ongoing', 'completed', 'active'])->default('not_started');
-
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('cascade');

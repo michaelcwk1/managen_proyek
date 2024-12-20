@@ -8,8 +8,12 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Submission extends Model
 {
-    use Notifiable, HasRoles; 
+    use Notifiable, HasRoles;
     protected $fillable = ['task_id', 'user_id', 'file_path', 'notes', 'status', 'reviewed_by', 'submission_date'];
+
+    protected $dates = [
+        'submission_date'
+    ];
 
     public function task()
     {
@@ -24,5 +28,9 @@ class Submission extends Model
     public function reviewer()
     {
         return $this->belongsTo(User::class, 'reviewed_by');
+    }
+    public function scopeComplete($query)
+    {
+        return $query->where('status', 'complete');
     }
 }

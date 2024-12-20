@@ -125,8 +125,8 @@
 
     </header><!-- End Header -->
 
-     <!-- ======= Admin Sidebar ======= -->
-     <aside id="sidebar" class="sidebar">
+    <!-- ======= Admin Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
         <ul class="sidebar-nav" id="sidebar-nav">
             <!-- Dashboard -->
             <li class="nav-item">
@@ -135,7 +135,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-    
+
             <!-- Projects -->
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#projects-nav" data-bs-toggle="collapse" href="#">
@@ -151,7 +151,7 @@
                     </li>
                 </ul>
             </li>
-    
+
             <!-- Tasks -->
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#tasks-nav" data-bs-toggle="collapse" href="#">
@@ -167,20 +167,15 @@
                     </li>
                 </ul>
             </li>
-            <!-- Submissions -->
+            <!-- report -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="">
+                <a class="nav-link collapsed" href="{{ route('admin.reporting.report') }}">
                     <i class="bi bi-clipboard-data"></i>
                     <span>Reporting Task</span>
                 </a>
             </li>
-            <!-- Submissions -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="">
-                    <i class="bi bi-display"></i>
-                    <span>Submission</span>
-                </a>
-            </li>
+          
+
         </ul>
     </aside>
     <!-- End Admin Sidebar -->
@@ -192,7 +187,7 @@
                 @yield('breadcrumb')
             </nav>
         </div><!-- End Page Title -->
-    
+
         <section class="section">
             @yield('content')
         </section>

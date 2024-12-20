@@ -4,22 +4,19 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log; // Add this line
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
-
-
     public function index()
     {
-        $tasks = Task::latest()->paginate(10);
-
-        // Eager load the assigned user (though this doesn't seem to be used)
-        foreach ($tasks as $task) {
-            $assignedUser = $task->assignedUser;
-        }
+        $tasks = Task::with(['assignedUser', 'project'])
+            ->latest()
+            ->paginate(10);
 
         return view('user.tasks.index', compact('tasks'));
     }
@@ -33,70 +30,88 @@ class TaskController extends Controller
                     'message' => 'Task cannot be taken.'
                 ], 400);
             }
-    
-            $task->status = 'in-progress';
+
+            $task->status = 'in_progress';
             $task->assigned_to = Auth::id();
             $task->save();
-    
-            // Redirect with success message
-            return redirect()->route('user.tasks.report')->with('success', 'Task successfully taken!');
+
+            return redirect()->route('user.tasks.report')
+                ->with('success', 'Task successfully taken!');
         } catch (\Exception $e) {
             Log::error('Take Task Error: ' . $e->getMessage());
             return back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
-    
-    public function show($taskId)
-    {
-        $task = Task::with('project')->findOrFail($taskId);
-        return response()->json([
-            'id' => $task->id,
-            'title' => $task->title,
-            'description' => $task->description,
-            'project' => $task->project->name ?? 'No Project',
-            'deadline' => $task->deadline,
-            'status' => $task->status
-        ]);
-    }
 
     public function report()
     {
         $tasks = Task::where('assigned_to', Auth::id())
-            ->where('status', 'in-progress')
+            ->where('status', 'in_progress')
             ->with('project')
             ->get();
-
+        
         return view('user.tasks.report', compact('tasks'));
     }
-    public function takeAndReport(Request $request)
+    
+    public function submitTask(Request $request, Task $task)
     {
-        $taskId = $request->input('task_id');
-
         try {
-            $task = Task::findOrFail($taskId);
+            // Validate request
+            $request->validate([
+                'submission_file' => 'required|file|mimes:zip,rar|max:10240', // Max 10MB
+            ]);
 
-            if ($task->status !== 'pending') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Task cannot be taken.'
-                ], 400);
+            // Check if task belongs to user
+            if ($task->assigned_to !== Auth::id()) {
+                return back()->with('error', 'You are not authorized to submit this task.');
             }
 
-            $task->status = 'in-progress';
-            $task->assigned_to = Auth::id();
-            $task->save();
+            // Handle file upload
+            if ($request->hasFile('submission_file')) {
+                $file = $request->file('submission_file');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('submissions', $fileName, 'public');
 
-            // Redirect to report page
-            return response()->json([
-                'success' => true,
-                'redirectUrl' => route('user.tasks.report')
-            ]);
+                // Update task status
+                $task->status = 'completed';
+                $task->save();
+
+                // Create submission
+                Submission::create([
+                    'task_id' => $task->id,
+                    'user_id' => Auth::id(),
+                    'file_path' => $filePath,
+                    'status' => 'pending',
+                    'submission_date' => now(),
+                ]);
+
+                return redirect()->route('user.submissions.index')
+                    ->with('success', 'Task submitted successfully!');
+            }
+
+            return back()->with('error', 'No file was uploaded.');
         } catch (\Exception $e) {
-            Log::error('Take Task Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred: ' . $e->getMessage()
-            ], 500);
+            Log::error('Task Submission Error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred while submitting the task.');
         }
     }
+
+    public function submissionIndex()
+    {
+        $submissions = Submission::with(['task.project'])
+            ->where('user_id', Auth::id())
+            ->get()
+            ->map(function ($submission) {
+                return [
+                    'task_title' => $submission->task->title,
+                    'project_name' => $submission->task->project->name ?? 'No Project',
+                    'file_path' => $submission->file_path,
+                    'status' => $submission->status
+                ];
+            });
+
+        return view('user.submissions.index', compact('submissions'));
+    }
+
+    
 }

@@ -10,13 +10,12 @@ class Task extends Model
 {
     use Notifiable, HasRoles;
     protected $fillable = ['project_id', 'title', 'description', 'status', 'assigned_to', 'difficulty_level', 'estimated_hours', 'actual_hours', 'deadline'];
-    
-
+ 
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
- 
+
     public function assignee()
     {
         return $this->belongsTo(User::class, 'assigned_to');
@@ -26,6 +25,13 @@ class Task extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
+    // Task model
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+
     public function submissions()
     {
         return $this->hasMany(Submission::class);
@@ -34,5 +40,19 @@ class Task extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    protected static function booted()
+    {
+        static::created(function ($task) {
+            $task->project->updateTaskCounts();
+        });
+
+        static::updated(function ($task) {
+            $task->project->updateTaskCounts();
+        });
+
+        static::deleted(function ($task) {
+            $task->project->updateTaskCounts();
+        });
     }
 }

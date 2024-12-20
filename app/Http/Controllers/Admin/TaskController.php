@@ -7,12 +7,14 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::with(['project', 'assignee'])->latest()->paginate(10);
+        $tasks = Task::with('project')->paginate(10); // Memuat relasi project
         return view('admin.tasks.index', compact('tasks'));
     }
 
@@ -30,16 +32,29 @@ class TaskController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'project_id' => 'required|exists:projects,id',
-            'assigned_to' => 'nullable|exists:users,id',
-            'deadline' => 'nullable|date',
+            'assigned_to' => 'required|exists:users,id',
+            'deadline' => 'required|date',
+            'file' => 'nullable|file|mimes:jpeg,png,pdf|max:2048', // Validate file
         ]);
-
-        Task::create($validated);
-
-        return redirect()->route('admin.tasks.index')->with('success', 'Task created successfully.');
+    
+        $task = new Task();
+        $task->title = $validated['title'];
+        $task->project_id = $validated['project_id'];
+        $task->assigned_to = $validated['assigned_to'];
+        $task->deadline = $validated['deadline'];
+    
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('task_files', 'public'); // Store the file
+            $task->file_path = $filePath; // Store the file path in the database
+        }
+    
+        $task->save();
+    
+        return redirect()->route('admin.tasks.index')->with('success', 'Task created successfully');
     }
+    
+    
 
     public function edit(Task $task)
     {
@@ -50,18 +65,16 @@ class TaskController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi input jika diperlukan
-        $validated = $request->validate([
+        $task = Task::findOrFail($id);
+
+        $request->validate([
             'title' => 'required|string|max:255',
             'project_id' => 'required|exists:projects,id',
             'assigned_to' => 'nullable|exists:users,id',
             'deadline' => 'required|date',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240', // Validate file types
         ]);
 
-        // Temukan task berdasarkan ID
-        $task = Task::findOrFail($id);
-
-        // Perbarui data task
         $task->update([
             'title' => $request->title,
             'project_id' => $request->project_id,
@@ -69,9 +82,25 @@ class TaskController extends Controller
             'deadline' => $request->deadline,
         ]);
 
-        // Redirect ke halaman index tasks setelah update
-        return redirect()->route('admin.tasks.index')->with('success', 'Task updated successfully!');
+        // Handle file upload if new file is uploaded
+        if ($request->hasFile('file')) {
+            // Delete old file if it exists
+            if ($task->file_path && Storage::exists('public/' . $task->file_path)) {
+                Storage::delete('public/' . $task->file_path);
+            }
+
+            // Store the new file
+            $file = $request->file('file');
+            $filePath = $file->store('task_files', 'public');
+            $task->file_path = $filePath;
+            $task->save();
+        }
+
+        // Send the file to the user via API or notification
+
+        return redirect()->route('admin.tasks.index')->with('success', 'Task updated successfully.');
     }
+
 
 
     public function destroy(Task $task)

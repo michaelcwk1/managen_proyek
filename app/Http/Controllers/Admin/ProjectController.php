@@ -19,55 +19,50 @@ class ProjectController extends Controller
         return view('admin.projects.create');
     }
 
-    
-
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required',
             'client_name' => 'required|string|max:255',
-            'deadline' => 'required|date',
-            'status' => 'required|in:active,completed,on_hold'
+            'description' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required|string|in:active,completed,on_hold',
         ]);
 
-
         Project::create($validated);
-        
-        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully');
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
     }
+
 
     public function edit(Project $project)
     {
         return view('admin.projects.edit', compact('project'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Project $project)
     {
-        $project = Project::findOrFail($id);
-    
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:active,completed,on_hold',
+            'status' => 'required|in:not_started,ongoing,completed,active',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'total_tasks' => 'nullable|integer|min:0',
+            'completed_tasks' => 'nullable|integer|min:0|max:' . $request->input('total_tasks', 0),
         ]);
-    
-        $project->update([
-            'name' => $request->name,
-            'client_name' => $request->client_name,
-            'description' => $request->description,
-            'status' => $request->status,
-        ]);
-    
-        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully!');
+
+        $project->update($validated);
+
+        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully');
     }
-    
-    
 
     public function destroy(Project $project)
     {
         $project->delete();
+
         return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully');
     }
 }

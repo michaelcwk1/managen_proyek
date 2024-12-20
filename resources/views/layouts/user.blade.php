@@ -122,60 +122,64 @@
 
     </header><!-- End Header -->
 
-  <!-- ======= User Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <!-- Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ route('user.dashboard') }}">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
+    <!-- ======= User Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ route('user.dashboard') }}">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
 
-        <!-- My Tasks -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#tasks-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-list-task"></i>
-                <span>My Tasks</span>
-                <i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="tasks-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('user.tasks.index') }}">
-                        <i class="bi bi-circle"></i><span>Index</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('user.tasks.report') }}">
-                        <i class="bi bi-circle"></i><span>History</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
+            <!-- My Tasks -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#tasks-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-list-task"></i>
+                    <span>My Tasks</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="tasks-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('user.tasks.index') }}">
+                            <i class="bi bi-circle"></i><span>Index</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('user.tasks.report') }}">
+                            <i class="bi bi-circle"></i><span>History</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-        <!-- Submissions -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#submissions-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-upload"></i>
-                <span>Submissions</span>
-                <i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="submissions-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href=" ">
-                        <i class="bi bi-circle"></i><span>Submit Task</span>
-                    </a>
-                </li>
-                <li>
-                    <a href=" ">
-                        <i class="bi bi-circle"></i><span>Feedback</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</aside>
+            <!-- Submissions -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#submissions-nav" data-bs-toggle="collapse"
+                    href="#">
+                    <i class="bi bi-upload"></i>
+                    <span>Submissions</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="submissions-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{{ route('user.submissions.index') }}">
+                            <i class="bi bi-circle"></i><span>Submit Task</span>
+                        </a>
+                    </li>
+                    @isset($submission)
+                        <!-- Check if $submission is available -->
+                        <li>
+                            <a href="{{ route('user.submissions.feedback', ['submission' => $submission->id]) }}">
+                                <i class="bi bi-circle"></i><span>Feedback</span>
+                            </a>
+                        </li>
+                    @endisset
+                </ul>
+            </li>
+        </ul>
+    </aside>
 
     <!-- End User Sidebar -->
 
@@ -187,7 +191,7 @@
                 @yield('breadcrumb')
             </nav>
         </div><!-- End Page Title -->
-    
+
         <section class="section">
             @yield('content')
         </section>

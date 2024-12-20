@@ -48,14 +48,25 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="deadline">Deadline</label>
-                        <input type="date" name="deadline" id="deadline" 
-                            class="form-control @error('deadline') is-invalid @enderror" 
-                            value="{{ old('deadline') }}" required>
-                        @error('deadline')
+                        <label for="start_date">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" 
+                            class="form-control @error('start_date') is-invalid @enderror" 
+                            value="{{ old('start_date') }}" required>
+                        @error('start_date')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="end_date">End Date</label>
+                        <input type="date" name="end_date" id="end_date" 
+                            class="form-control @error('end_date') is-invalid @enderror" 
+                            value="{{ old('end_date') }}" required>
+                        @error('end_date')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    
 
                     <div class="form-group mb-3">
                         <label for="status">Status</label>

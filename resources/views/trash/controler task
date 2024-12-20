@@ -1,0 +1,171 @@
+
+    public function index()
+    {
+        $tasks = Task::latest()->paginate(10);
+
+        // Eager load the assigned user (though this doesn't seem to be used)
+        foreach ($tasks as $task) {
+            $assignedUser = $task->assignedUser;
+            $task->file_path;
+        }
+
+        return view('user.tasks.index', compact('tasks'));
+    }
+
+    public function takeTask(Request $request, Task $task)
+    {
+        try {
+            if ($task->status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Task cannot be taken.'
+                ], 400);
+            }
+
+            // Update the status to 'in_progress' (with underscore)
+            $task->status = 'in_progress';  // Correct the status value here
+            $task->assigned_to = Auth::id();
+            $task->save();
+
+            // Redirect with success message
+            return redirect()->route('user.tasks.report')->with('success', 'Task successfully taken!');
+        } catch (\Exception $e) {
+            Log::error('Take Task Error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred: ' . $e->getMessage());
+        }
+    }
+
+
+
+    public function show($taskId)
+    {
+        $task = Task::with('project')->findOrFail($taskId);
+        return response()->json([
+            'id' => $task->id,
+            'title' => $task->title,
+            'description' => $task->description,
+            'project' => $task->project->name ?? 'No Project',
+            'deadline' => $task->deadline,
+            'status' => $task->status
+        ]);
+    }
+
+    public function report()
+    {
+        $tasks = Task::where('assigned_to', Auth::id())
+            ->where('status', 'in_progress')
+            ->with('project')
+            ->get();
+
+        return view('user.tasks.report', compact('tasks'));
+    }
+
+    public function markDone(Request $request, $taskId)
+    {
+        try {
+            $task = Task::findOrFail($taskId);
+
+            $request->validate([
+                'submission_file' => 'required|mimes:zip,rar|max:10240',
+            ]);
+
+            $filePath = $request->file('submission_file')->store('submissions', 'public');
+
+            // Instead of creating in database, store in session
+            $submissionData = [
+                'task_id' => $task->id,
+                'user_id' => auth()->id(),
+                'status' => 'done',
+                'file_path' => $filePath,
+                'task_title' => $task->title,
+                'project_name' => $task->project->name ?? 'No Project'
+            ];
+
+            // Get existing submissions from session or initialize empty array
+            $pendingSubmissions = session()->get('pending_submissions', []);
+            $pendingSubmissions[] = $submissionData;
+            session()->put('pending_submissions', $pendingSubmissions);
+
+            // Update task status
+            $task->status = 'completed';
+            $task->save();
+
+            return redirect()->route('user.submissions.index')
+                ->with('success', 'Task marked as done and added to submissions.');
+        } catch (\Exception $e) {
+            Log::error('Mark Done Error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred while marking task as done.');
+        }
+    }
+
+
+
+    public function submissionIndex()
+    {
+        // Simulate fetching data from an API
+        $response = Http::get('https://api.example.com/history');
+
+        if ($response->failed()) {
+            return back()->with('error', 'Failed to fetch submission data from API.');
+        }
+
+        $submissions = $response->json();
+        return view('user.submissions.index', compact('submissions'));
+    }
+
+    public function takeAndReport(Request $request)
+    {
+        $taskId = $request->input('task_id');
+
+        try {
+            $task = Task::findOrFail($taskId);
+
+            if ($task->status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Task cannot be taken.'
+                ], 400);
+            }
+
+            $task->status = 'in-progress';
+            $task->assigned_to = Auth::id();
+            $task->save();
+
+            // Redirect to report page
+            return response()->json([
+                'success' => true,
+                'redirectUrl' => route('user.tasks.report')
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Take Task Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    public function submitTask(Request $request, Task $task)
+    {
+        try {
+            $request->validate([
+                'submission_file' => 'required|mimes:zip,rar|max:10240',
+            ]);
+
+            $filePath = $request->file('submission_file')->store('submissions', 'public');
+
+            $submission = new Submission();
+            $submission->task_id = $task->id;
+            $submission->user_id = Auth::id();
+            $submission->file_path = $filePath;
+            $submission->status = 'done'; // Change status to 'done' instead of leaving it as pending
+            $submission->save();
+
+            $task->status = 'completed'; // Update task status to completed
+            $task->save();
+
+            return redirect()->route('user.tasks.report')->with('success', 'Task successfully submitted!');
+        } catch (\Exception $e) {
+            Log::error('Submit Task Error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred: ' . $e->getMessage());
+        }
+    }

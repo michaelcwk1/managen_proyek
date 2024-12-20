@@ -34,12 +34,7 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null'); // Relasi ke tabel users
-            $table->timestamps();
-        });
+   
         
     }
 

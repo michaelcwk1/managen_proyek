@@ -25,15 +25,15 @@ return new class extends Migration
             $table->timestamps();
         });
         
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'in-progress', 'completed'])->default('pending');
-        });
+        // Schema::table('tasks', function (Blueprint $table) {
+        //     $table->enum('status', ['pending', 'in-progress', 'completed'])->default('pending');
+        // });
         
     }
     
     
 
-    /**
+    /**`
      * Reverse the migrations.
      */
     public function down(): void

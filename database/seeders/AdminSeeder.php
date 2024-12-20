@@ -1,5 +1,4 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -12,8 +11,8 @@ class AdminSeeder extends Seeder
     {
         // Data Admin Default
         $adminData = [
-            'name' => 'Admin',
-            'email' => 'admixn@example.com',
+            'name' => 'Faris',
+            'email' => 'admin@example.com',
             'password' => bcrypt('password'), // Pastikan mengganti password default ini
         ];
 
@@ -21,13 +20,8 @@ class AdminSeeder extends Seeder
         $admin = User::where('email', $adminData['email'])->first();
 
         if (!$admin) {
-            // Buat user admin
             $admin = User::create($adminData);
-
-            // Pastikan role admin sudah ada
             $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-
-            // Assign role admin ke user
             $admin->assignRole($adminRole);
 
             $this->command->info('Admin user created successfully.');
