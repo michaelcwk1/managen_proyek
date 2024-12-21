@@ -25,23 +25,13 @@ class SubmissionController extends Controller
         try {
             $submission = Submission::findOrFail($id);
 
-            // Remove 'public/' prefix from file path since Storage already points to public disk
-            $filePath = str_replace('public/', '', $submission->file_path);
-
-            // Check if file exists
-            if (!Storage::disk('public')->exists($filePath)) {
-                return back()->with('error', 'File not found. Path: ' . $filePath);
+            // Check if file exists in public disk
+            if (!Storage::disk('public')->exists($submission->file_path)) {
+                return back()->with('error', 'File not found. Path: ' . $submission->file_path);
             }
 
-            // Get original file name
             $fileName = basename($submission->file_path);
-
-            // Return file download response
-            $fullPath = storage_path('app/public/' . $filePath);
-
-            if (!file_exists($fullPath)) {
-                return back()->with('error', 'File not found at: ' . $fullPath);
-            }
+            $fullPath = storage_path('app/public/' . $submission->file_path);
 
             return response()->download($fullPath, $fileName);
         } catch (\Exception $e) {

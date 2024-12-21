@@ -49,41 +49,38 @@ class TaskController extends Controller
             ->where('status', 'in_progress')
             ->with('project')
             ->get();
-        
+
         return view('user.tasks.report', compact('tasks'));
     }
-    
+
     public function submitTask(Request $request, Task $task)
     {
         try {
-            // Validate request
             $request->validate([
-                'submission_file' => 'required|file|mimes:zip,rar|max:10240', // Max 10MB
+                'submission_file' => 'required|file|mimes:zip,rar|max:10240',
             ]);
 
-            // Check if task belongs to user
             if ($task->assigned_to !== Auth::id()) {
                 return back()->with('error', 'You are not authorized to submit this task.');
             }
 
-            // Handle file upload
             if ($request->hasFile('submission_file')) {
                 $file = $request->file('submission_file');
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('public/submissions', $fileName);  
 
+                // Store file in the public disk under submissions folder
+                $file->storeAs('submissions', $fileName, 'public');
 
-                
+                // Save the correct path without 'public/' prefix
+                $filePath = 'submissions/' . $fileName;
 
-                // Update task status
                 $task->status = 'completed';
                 $task->save();
 
-                // Create submission
                 Submission::create([
                     'task_id' => $task->id,
                     'user_id' => Auth::id(),
-                    'file_path' => $filePath,
+                    'file_path' => $filePath,  // Save path without 'public/' prefix
                     'status' => 'pending',
                     'submission_date' => now(),
                 ]);
@@ -115,6 +112,4 @@ class TaskController extends Controller
 
         return view('user.submissions.index', compact('submissions'));
     }
-
-    
 }
