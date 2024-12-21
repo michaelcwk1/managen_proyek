@@ -15,11 +15,7 @@ class UserSeeder extends Seeder
             'email' => 'user@example.com',
             'password' => bcrypt('password'), 
         ];
-        $userData = [
-            'name' => 'Farhan',
-            'email' => 'user1@example.com',
-            'password' => bcrypt('password'), 
-        ];
+   
     
 
         $user = User::where('email', $userData['email'])->first();
