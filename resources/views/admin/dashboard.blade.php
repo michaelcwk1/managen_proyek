@@ -1,5 +1,16 @@
 @extends('layouts.admin')
 
+@section('page-title')
+    Dashboard
+@endsection
+
+@section('breadcrumb')
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+    <li class="breadcrumb-item active">Dashboard</li>
+</ol>
+@endsection
+
 @section('content')
     <section class="section dashboard">
         <div class="row">

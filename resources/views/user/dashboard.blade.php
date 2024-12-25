@@ -10,284 +10,180 @@
         <li class="breadcrumb-item active">Dashboard</li>
     </ol>
 @endsection
-
 @section('content')
-<section class="section dashboard">
-    <div class="row">
-
-      <!-- Left side columns -->
-      <div class="col-lg-8">
+    <section class="section dashboard">
         <div class="row">
 
-          <!-- Sales Card -->
-          <div class="col-xxl-4 col-md-6">
-            <div class="card info-card sales-card">
+            <!-- Left side columns -->
+            <div class="col-lg-8">
+                <div class="row">
 
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
+                    <!-- Total Tasks Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card total-tasks-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Tasks </h5>
 
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-list-check"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>{{ $tasks->count() }}</h6> <!-- Display the total number of tasks -->
+                                        <span
+                                            class="text-success small pt-1 fw-bold">{{ $tasks->where('status', 'completed')->count() }}%</span>
+                                        <span class="text-muted small pt-2 ps-1">completed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-              <div class="card-body">
-                <h5 class="card-title">Sales <span>| Today</span></h5>
+                    <!-- End Total Tasks Card -->
 
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-cart"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6>145</h6>
-                    <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                    <!-- In-Progress Tasks Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card in-progress-tasks-card">
+                            <div class="card-body">
+                                <h5 class="card-title">In-Progress Tasks </h5>
 
-                  </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>{{ $tasks->where('status', 'in-progress')->count() }}</h6>
+                                        <!-- Display in-progress tasks -->
+
+                                        <span class="text-warning small pt-1 fw-bold">8%</span> <span
+                                            class="text-muted small pt-2 ps-1">increase</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- End In-Progress Tasks Card -->
+
+                    <!-- Completed Tasks Card -->
+                    <div class="col-xxl-4 col-xl-12">
+
+                        <div class="card info-card completed-tasks-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Completed Tasks </h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-check-circle"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>{{ $tasks->where('status', 'completed')->count() }}</h6>
+                                        <!-- Display completed tasks -->
+
+                                        <span class="text-success small pt-1 fw-bold">5%</span> <span
+                                            class="text-muted small pt-2 ps-1">increase</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div><!-- End Completed Tasks Card -->
                 </div>
-              </div>
+                <!-- Recent Tasks Card -->
+                <div class="col-12">
+                    <div class="card recent-tasks overflow-auto">
+                        <div class="card-body">
+                            <h5 class="card-title">Recent Tasks </h5>
+                            <table class="table table-borderless datatable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Task Name</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Assigned To</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($tasks as $task)
+                                        <tr>
+                                            <th scope="row"><a href="#">#{{ $task->id }}</a></th>
+                                            <td>{{ $task->title }}</td>
+                                            <td><span
+                                                    class="badge bg-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in-progress' ? 'warning' : 'danger') }}">{{ ucfirst($task->status) }}</span>
+                                            </td>
+                                            <td>{{ $task->user->name }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
 
-            </div>
-          </div><!-- End Sales Card -->
-
-          <!-- Revenue Card -->
-          <div class="col-xxl-4 col-md-6">
-            <div class="card info-card revenue-card">
-
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Revenue <span>| This Month</span></h5>
-
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6>$3,264</h6>
-                    <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div><!-- End Revenue Card -->
-
-          <!-- Customers Card -->
-          <div class="col-xxl-4 col-xl-12">
-
-            <div class="card info-card customers-card">
-
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Customers <span>| This Year</span></h5>
-
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-people"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6>1244</h6>
-                    <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
-
-                  </div>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
-              </div>
-            </div>
+                <!-- End Recent Tasks Card -->
 
-          </div><!-- End Customers Card -->
+            </div><!-- End Left side columns -->
 
-      >
 
-          <!-- Recent Sales -->
-          <div class="col-12">
-            <div class="card recent-sales overflow-auto">
+            <!-- Right side columns -->
+            <div class="col-lg-4">
 
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Recent Activity</h5>
+                        <div class="activity" style="max-height: 250x; overflow-y: auto;">
+                            <!-- Show the most recent activities first -->
+                            @foreach ($tasks->reverse()->take(5) as $task)
+                                <div class="activity-item d-flex">
+                                    <div class="activite-label">Today</div>
+                                    <i
+                                        class="bi bi-circle-fill activity-badge text-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in-progress' ? 'warning' : 'danger') }} align-self-start"></i>
+                                    <div class="activity-content">
+                                        Task {{ $task->title }} status changed to <span
+                                            class="fw-bold text-dark">{{ ucfirst($task->status) }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <!-- End Recent Activity -->
 
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
 
-              <div class="card-body">
-                <h5 class="card-title">Recent Sales <span>| Today</span></h5>
 
-                <table class="table table-borderless datatable">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Customer</th>
-                      <th scope="col">Product</th>
-                      <th scope="col">Price</th>
-                      <th scope="col">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row"><a href="#">#2457</a></th>
-                      <td>Brandon Jacob</td>
-                      <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                      <td>$64</td>
-                      <td><span class="badge bg-success">Approved</span></td>
-                    </tr>
-                    <tr>
-                      <th scope="row"><a href="#">#2147</a></th>
-                      <td>Bridie Kessler</td>
-                      <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                      <td>$47</td>
-                      <td><span class="badge bg-warning">Pending</span></td>
-                    </tr>
-                    <tr>
-                      <th scope="row"><a href="#">#2049</a></th>
-                      <td>Ashleigh Langosh</td>
-                      <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                      <td>$147</td>
-                      <td><span class="badge bg-success">Approved</span></td>
-                    </tr>
-                    <tr>
-                      <th scope="row"><a href="#">#2644</a></th>
-                      <td>Angus Grady</td>
-                      <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                      <td>$67</td>
-                      <td><span class="badge bg-danger">Rejected</span></td>
-                    </tr>
-                    <tr>
-                      <th scope="row"><a href="#">#2644</a></th>
-                      <td>Raheem Lehner</td>
-                      <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                      <td>$165</td>
-                      <td><span class="badge bg-success">Approved</span></td>
-                    </tr>
-                  </tbody>
-                </table>
+                <!-- Recent Submission -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Recent Submissions</h5>
 
-              </div>
+                        <div class="activity" style="max-height: 300px; overflow-y: auto;">
+                            @foreach ($submissions->reverse()->take(5) as $submission)
+                                <div class="activity-item d-flex">
+                                    <div class="activite-label">Today</div>
+                                    <i
+                                        class="bi bi-file-earmark-check activity-badge text-{{ $submission->status == 'approved' ? 'success' : ($submission->status == 'pending' ? 'warning' : 'danger') }} align-self-start"></i>
+                                    <div class="activity-content">
+                                        Submission for Task: <strong>{{ $submission->task->title }}</strong>
+                                        <br>
+                                        Status: <span class="fw-bold text-dark">{{ ucfirst($submission->status) }}</span>
+                                        <br>
+                                        File: <a href="{{ asset($submission->file_path) }}" target="_blank">Download</a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <!-- End Recent Submission -->
 
-            </div>
-          </div><!-- End Recent Sales -->
- 
+
+
+
+            </div><!-- End Right side columns -->
 
         </div>
-      </div><!-- End Left side columns -->
-
-      <!-- Right side columns -->
-      <div class="col-lg-4">
-
-        <!-- Recent Activity -->
-        <div class="card">
-          <div class="filter">
-            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-              <li class="dropdown-header text-start">
-                <h6>Filter</h6>
-              </li>
-
-              <li><a class="dropdown-item" href="#">Today</a></li>
-              <li><a class="dropdown-item" href="#">This Month</a></li>
-              <li><a class="dropdown-item" href="#">This Year</a></li>
-            </ul>
-          </div>
-
-          <div class="card-body">
-            <h5 class="card-title">Recent Activity <span>| Today</span></h5>
-
-            <div class="activity">
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">32 min</div>
-                <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                <div class="activity-content">
-                  Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
-                </div>
-              </div><!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">56 min</div>
-                <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-                <div class="activity-content">
-                  Voluptatem blanditiis blanditiis eveniet
-                </div>
-              </div><!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">2 hrs</div>
-                <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-                <div class="activity-content">
-                  Voluptates corrupti molestias voluptatem
-                </div>
-              </div><!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">1 day</div>
-                <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
-                <div class="activity-content">
-                  Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati voluptatem</a> tempore
-                </div>
-              </div><!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">2 days</div>
-                <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
-                <div class="activity-content">
-                  Est sit eum reiciendis exercitationem
-                </div>
-              </div><!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">4 weeks</div>
-                <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
-                <div class="activity-content">
-                  Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
-                </div>
-              </div><!-- End activity item-->
-
-            </div>
-
-          </div>
-        </div><!-- End Recent Activity -->
-
-         
-       
- 
-
-      </div><!-- End Right side columns -->
-
-    </div>
-  </section>
+    </section>
 @endsection
+
