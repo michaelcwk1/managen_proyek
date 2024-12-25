@@ -13,7 +13,7 @@ class AdminSeeder extends Seeder
         $adminData = [
             'name' => 'Faris',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password'), // Pastikan mengganti password default ini
+            'password' => bcrypt('password'),  
         ];
 
         // Cek jika admin sudah ada berdasarkan email

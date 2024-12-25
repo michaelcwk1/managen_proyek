@@ -10,7 +10,7 @@ class Task extends Model
 {
     use Notifiable, HasRoles;
     protected $fillable = ['project_id', 'title', 'description', 'status', 'assigned_to', 'difficulty_level', 'estimated_hours', 'actual_hours', 'deadline'];
- 
+
     public function project()
     {
         return $this->belongsTo(Project::class);
@@ -24,6 +24,12 @@ class Task extends Model
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
+    // Task.php (Model)
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
 
     // Task model
     public function assignedTo()
@@ -37,10 +43,7 @@ class Task extends Model
         return $this->hasMany(Submission::class);
     }
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
+
     protected static function booted()
     {
         static::created(function ($task) {

@@ -37,24 +37,24 @@ class TaskController extends Controller
             'deadline' => 'required|date',
             'file' => 'nullable|file|mimes:jpeg,png,pdf|max:2048', // Validate file
         ]);
-    
+
         $task = new Task();
         $task->title = $validated['title'];
         $task->project_id = $validated['project_id'];
         $task->assigned_to = $validated['assigned_to'];
         $task->deadline = $validated['deadline'];
-    
+
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->store('task_files', 'public'); // Store the file
             $task->file_path = $filePath; // Store the file path in the database
         }
-    
+
         $task->save();
-    
+
         return redirect()->route('admin.tasks.index')->with('success', 'Task created successfully');
     }
-    
-    
+
+
 
     public function edit(Task $task)
     {
@@ -108,4 +108,9 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->route('admin.tasks.index')->with('success', 'Task deleted successfully');
     }
+
+
+    
+
+   
 }

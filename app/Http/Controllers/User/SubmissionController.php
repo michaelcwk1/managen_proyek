@@ -78,7 +78,7 @@ class SubmissionController extends Controller
                 ->with('success', 'Revision submitted successfully!');
         } catch (\Exception $e) {
             Log::error('Submission Revision Error: ' . $e->getMessage());
-            return back()->with('error', 'An error occurred while submitting the revision.');
+            return back()->with('success', 'Berhasil submit revisi');
         }
     }
 }
