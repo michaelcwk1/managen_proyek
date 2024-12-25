@@ -14,6 +14,7 @@ class AdminSeeder extends Seeder
             'name' => 'Faris',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),  
+            'role' => 'admin'
         ];
 
         // Cek jika admin sudah ada berdasarkan email
