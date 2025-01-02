@@ -35,8 +35,5 @@ class User extends Authenticatable
         return $this->hasMany(Submission::class, 'reviewed_by');
     }
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
+     
 }

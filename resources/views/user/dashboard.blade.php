@@ -52,7 +52,7 @@
                                         <i class="bi bi-arrow-repeat"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ $tasks->where('status', 'in-progress')->count() }}</h6>
+                                        <h6>{{ $tasks->where('status', 'in_progress')->count() }}</h6>
                                         <!-- Display in-progress tasks -->
 
                                         <span class="text-warning small pt-1 fw-bold">8%</span> <span
@@ -109,7 +109,7 @@
                                             <th scope="row"><a href="#">#{{ $task->id }}</a></th>
                                             <td>{{ $task->title }}</td>
                                             <td><span
-                                                    class="badge bg-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in-progress' ? 'warning' : 'danger') }}">{{ ucfirst($task->status) }}</span>
+                                                    class="badge bg-{{ $task->status == 'completed' ? 'success' : ($task->status == 'in_progress' ? 'warning' : 'danger') }}">{{ ucfirst($task->status) }}</span>
                                             </td>
                                             <td>{{ $task->user->name }}</td>
                                         </tr>

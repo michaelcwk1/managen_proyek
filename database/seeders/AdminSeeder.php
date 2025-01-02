@@ -11,7 +11,7 @@ class AdminSeeder extends Seeder
     {
         // Data Admin Default
         $adminData = [
-            'name' => 'Faris',
+            'name' => 'Pak Faris',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),  
             'role' => 'admin'
