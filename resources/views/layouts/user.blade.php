@@ -142,7 +142,6 @@
                         <!-- Check if $submission is available -->
                         <li>
                             <a href="{{ route('user.submissions.feedback', ['submission' => $submission->id]) }}">
-                                <i class="bi bi-circle"></i><span>Feedback</span>
                             </a>
                         </li>
                     @endisset
